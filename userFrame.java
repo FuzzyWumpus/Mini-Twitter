@@ -16,6 +16,7 @@ import javax.swing.tree.TreeNode;
 public class userFrame extends JFrame implements UserObserver{
 
     final private Font mainFont = new Font("Segoe print", Font.BOLD, 14);
+    final private Font titleFont = new Font("MonoSpaced", Font.BOLD, 26);
     JTextField tweet;
     JLabel userID;
     JList<String> followingList;
@@ -26,14 +27,16 @@ public class userFrame extends JFrame implements UserObserver{
     private TreeView treeView2;
 
     public userFrame(DefaultMutableTreeNode rootNode, User selectedUser, TreeView treeView) {
-        userID = new JLabel(selectedUser.getUserID());
-        userID.setFont(mainFont);
+        userID = new JLabel("User: " + selectedUser.getUserID());
+        userID.setFont(titleFont);
         this.selectedUser = selectedUser;
         followingListModel = new DefaultListModel<>();
         newsFeedListModel = new DefaultListModel<>();
         treeView2 = treeView;
         selectedUser.registerObserver(this);
-        System.out.println(selectedUser.getNewsFeed());
+        
+        //using java.util.date allow it to format the time stamp in a much more readable way.
+        System.out.println("User was created at: " + new java.util.Date(selectedUser.getCreationTime()));
          
 
         JButton followUser = new JButton("Follow User");
@@ -162,9 +165,14 @@ public class userFrame extends JFrame implements UserObserver{
         SwingUtilities.invokeLater(() -> {
             newsFeedListModel.clear();
             List<String> newsFeed = selectedUser.getNewsFeed();
+
             for (String tweet : newsFeed) {
                 newsFeedListModel.addElement(tweet);
             }
+
+             long lastUpdateTime = selectedUser.getLastUpdateTime();
+            System.out.println("Update Time Stamp " + new java.util.Date(lastUpdateTime));
+
         });
     }
 

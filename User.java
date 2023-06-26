@@ -15,7 +15,8 @@ public class User implements Component{
     private int positiveMessageCount;
     private List<UserObserver> observers;
     private static final String[] positiveWords = {"good", "great", "awesome", "happy", "excellent"};
-
+    private long creationTime;
+    private long lastUpdateTime;
 
     public User(String ID, TreeView tV) {
         setUserID(ID);
@@ -25,8 +26,18 @@ public class User implements Component{
         treeView = tV;
         observers = new ArrayList<>();
         positiveMessageCount = 0;
+        creationTime = System.currentTimeMillis();
+        lastUpdateTime = 0;
     }
 
+
+    public long getCreationTime() {
+        return this.creationTime;
+    }
+
+     public long getLastUpdateTime() {
+        return lastUpdateTime;
+    }
 
      @Override
     public void addUser(String name) {
@@ -103,10 +114,9 @@ public class User implements Component{
        if (!newsFeed.contains(tweet)) {
         newsFeed.add(tweet);
         messageCount++;
-        System.out.println(newsFeed);
         updateFollowersNewsFeed(tweet); // Update the news feed of all followers
-        notifyObservers(); // Notify the observers about the new tweet
-        System.out.println(isPositiveMessage(tweet));
+        notifyObservers(); // Notify the observers about the new tweet    
+        lastUpdateTime = System.currentTimeMillis();
          if (isPositiveMessage(tweet)) {
             positiveMessageCount++;
     }
